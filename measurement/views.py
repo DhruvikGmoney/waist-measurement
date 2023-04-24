@@ -63,7 +63,7 @@ class add_waist_measurements(APIView):
                         return JsonResponse({"msg":"Measurement data already exists", 'waist_measurements': waist_measurements})
                     else:
                         # if the measurement does not exist, add it to the measurements CSV file
-                        with open('measurements.csv', 'a', newline='') as csvfile:
+                        with open(str(cur_dir)+'\measurements.csv', 'a', newline='') as csvfile:
                             writer = csv.writer(csvfile)
                             writer.writerow([height, weight, age, waist])
                             return JsonResponse({"msg":'Measurement added'}, safe=False)
