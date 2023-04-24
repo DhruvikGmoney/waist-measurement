@@ -8,6 +8,8 @@ from pathlib import Path
 from decimal import Decimal
 cur_dir=Path.cwd()
 import pandas as pd
+import os
+
 # Create your views here.
 
 
@@ -21,9 +23,12 @@ class filter_waist_measurements(APIView):
                 weight = float(request.data['weight'])
                 age = float(request.data['age'])  
                 print(height,weight,age)
-
+                module_dir = os.path.dirname(__file__)
+                print("module_dir >>",module_dir)
+                file_path = os.path.join(module_dir, 'measurements.csv')
+                print("file_path >>",file_path)
                 # read CSV file data
-                with open(str(cur_dir)+'\measurements.csv', 'r') as file:
+                with open(file_path, 'r') as file:
                     reader = csv.DictReader(file)
                     data = list(reader)
 
@@ -49,9 +54,12 @@ class add_waist_measurements(APIView):
                 weight = float(request.data['weight'])
                 age = float(request.data['age'])  
                 waist = float(request.data['waist'])
-            
+                module_dir = os.path.dirname(__file__)
+                print("module_dir >>",module_dir)
+                file_path = os.path.join(module_dir, 'measurements.csv')
+                print("file_path >>",file_path)
                 # read CSV file data
-                with open(str(cur_dir)+'\measurements.csv', 'r') as file:
+                with open(file_path, 'r') as file:
                     reader = csv.DictReader(file)
                     data = list(reader)
             
@@ -63,7 +71,7 @@ class add_waist_measurements(APIView):
                         return JsonResponse({"msg":"Measurement data already exists", 'waist_measurements': waist_measurements})
                     else:
                         # if the measurement does not exist, add it to the measurements CSV file
-                        with open(str(cur_dir)+'\measurements.csv', 'a', newline='') as csvfile:
+                        with open(file_path, 'a', newline='') as csvfile:
                             writer = csv.writer(csvfile)
                             writer.writerow([height, weight, age, waist])
                             return JsonResponse({"msg":'Measurement added'}, safe=False)
